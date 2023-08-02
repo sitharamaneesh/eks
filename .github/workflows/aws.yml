@@ -26,4 +26,4 @@ jobs:
     #
     - name: Deploy to aws
       run: aws eks update-kubeconfig --region eu-west-3 --name eks_cluster_tuto
-      run: kubectl apply -f vuejs-deployment.yaml
+           kubectl apply -f vuejs-deployment.yaml
