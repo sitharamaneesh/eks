@@ -25,7 +25,8 @@ jobs:
    # Deploy to aws
     #
     - name: Deploy to aws
-      run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      run: apt install curl
+           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
            aws eks update-kubeconfig --region eu-west-3 --name eks_cluster_tuto
            kubectl apply -f vuejs-deployment.yaml
