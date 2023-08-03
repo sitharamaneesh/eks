@@ -1,0 +1,48 @@
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+name: Build and push a Docker image
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: AKIAWGTBCUPCHPTTBGHW
+        aws-secret-access-key: 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
+        aws-region: eu-west-2
+
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    # Deploy to AWS EKS
+    - name: Deploy to AWS EKS
+      run: |
+        aws eks update-kubeconfig --region eu-west-3 --name eks_cluster_tuto
+        kubectl apply -f vuejs-deployment.yaml
+
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: AKIAWGTBCUPCHPTTBGHW
+        aws-secret-access-key: 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
+        aws-region: eu-north-1
+
+    # Deploy to AWS EKS
+    - name: Deploy to AWS EKS
+      run: |
+        aws eks update-kubeconfig --region eu-north-1 --name eks_cluster_tuto
+        kubectl apply -f vuejs-deployment.yaml
